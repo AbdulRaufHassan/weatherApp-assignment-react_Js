@@ -8,6 +8,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [cityName, setCityName] = useState("");
   const [weatherData, setWeatherData] = useState([]);
+  const [inValidCity, setInValidCity] = useState(true);
 
   const fetchWeatherData = async (cityName) => {
     try {
@@ -15,8 +16,16 @@ function App() {
         `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=22b66a2492e462c12e382d5cd409f6bb`
       );
       const data = await response.json();
-      setWeatherData(data);
-      setLoading(false);
+      if (!data.message) {
+        setWeatherData(data);
+        setLoading(false);
+        setInValidCity(false);
+        setCityName("");
+      } else {
+        setLoading(false);
+        setInValidCity(true);
+        setCityName('')
+      }
     } catch (error) {
       console.log(error);
     }
@@ -45,12 +54,22 @@ function App() {
             >
               Search
             </button>
-            <CurrentTempSec data={weatherData} />
-            <AirConditionsSec data={weatherData} />
+            {!inValidCity ? (
+              <>
+                <CurrentTempSec data={weatherData} />
+                <AirConditionsSec data={weatherData} />
+              </>
+            ) : (
+              <div className="notFound_msg">
+                <h1>City Not Found</h1>
+              </div>
+            )}
           </div>
-          <div>
-            <DaysForecastSec data={weatherData} />
-          </div>
+          {!inValidCity ? (
+            <div>
+              <DaysForecastSec data={weatherData} />
+            </div>
+          ) : null}
         </div>
       ) : (
         <div className="loading">

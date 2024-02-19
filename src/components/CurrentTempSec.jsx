@@ -5,36 +5,32 @@ import CLOUD_IMG from "../assets/images/cloud_img.png";
 import RAIN_IMG from "../assets/images/rain_img.png";
 import FEW_CLOUDS_IMG from "../assets/images/sun_cloud_img.png";
 import MOON_IMG from "../assets/images/moon_img.webp";
+import SNOW_IMG from "../assets/images/snow_img.webp";
 
 function CurrentTempSec({ data }) {
-  let img;
-  let imgClass;
-  let weather = data.list[0].weather[0].icon;
-  switch (weather) {
-    case "01d":
-      img = SUN_IMG;
-      imgClass = "sun_img";
+  let weather = data.list[0].weather[0];
+  let img = FEW_CLOUDS_IMG;
+  let imgClass = "few_cloud_img";
+  switch (true) {
+    case weather.main == "Snow":
+      img = SNOW_IMG;
+      imgClass = "snow_img";
       break;
-    case "01n":
-    case "02n":
-    case "03n":
-      img = MOON_IMG;
-      imgClass = "moon_img";
-      break;
-    case "02d":
-    case "03d":
-    case "04d":
-      img = CLOUD_IMG;
-      imgClass = "cloud_img";
-      break;
-    case "09d":
-    case "10d":
+    case weather.main == "Rain":
       img = RAIN_IMG;
       imgClass = "rain_img";
       break;
-    default:
-      img = FEW_CLOUDS_IMG;
-      imgClass = "few_cloud_img";
+    case data.list[0].sys.pod == "n":
+      img = MOON_IMG;
+      imgClass = "moon_img";
+      break;
+    case weather.main == "Clouds" && weather.discription != "few clouds":
+      img = CLOUD_IMG;
+      imgClass = "cloud_img";
+      break;
+    case weather.main == "Clear":
+      img = SUN_IMG;
+      imgClass = "sun_img";
       break;
   }
 

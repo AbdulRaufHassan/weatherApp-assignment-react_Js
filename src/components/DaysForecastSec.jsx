@@ -4,11 +4,10 @@ import SUN_IMG from "../assets/images/sun_img.webp";
 import CLOUD_IMG from "../assets/images/cloud_img.png";
 import RAIN_IMG from "../assets/images/rain_img.png";
 import FEW_CLOUDS_IMG from "../assets/images/sun_cloud_img.png";
-import MOON_IMG from "../assets/images/moon_img.webp";
+import SNOW_IMG from "../assets/images/snow_img.webp";
 
 function DaysForecastSec({ data }) {
-
-  const unsorted_forecast_arr = data.list.reduce((accumulator, current) => {
+  const forecastByDay = data.list.reduce((accumulator, current) => {
     if (
       current.dt_txt.split(" ")[0] != new Date().toISOString().slice(0, 10) &&
       accumulator.length > 0 &&
@@ -24,60 +23,51 @@ function DaysForecastSec({ data }) {
     return accumulator;
   }, []);
 
-  let averageTempArr = []
-  unsorted_forecast_arr.forEach((inner_arr) => {
-    let totalTemp = 0;
-    inner_arr.forEach((forecast) => {
-      totalTemp += forecast.main.temp;
-    });
-    averageTempArr.push(totalTemp / inner_arr.length)
-  });
+  const setImg_Class_dis = (weather) => {
+    let img = FEW_CLOUDS_IMG;
+    let imgClass = "few_cloud_img";
+    switch (weather.main) {
+      case "Snow":
+        img = SNOW_IMG;
+        imgClass = "snow_img";
+        break;
+      case "Rain":
+        img = RAIN_IMG;
+        imgClass = "rain_img";
+        break;
+      case "Clouds" && weather.discription != "few clouds":
+        img = CLOUD_IMG;
+        imgClass = "cloud_img";
+        break;
+      case "Clear":
+        img = SUN_IMG;
+        imgClass = "sun_img";
+        break;
+    }
+    return { img, imgClass };
+  };
 
-  // const setWeatherImg = (v) => {
-  //   let img;
-  //   let imgClass;
-  //   let weather = v.weather[0].icon;
-  //   switch (weather) {
-  //     case "01d":
-  //       img = SUN_IMG;
-  //       imgClass = "sun_img";
-  //       break;
-  //     case "01n":
-  //     case "02n":
-  //       img = MOON_IMG;
-  //       break;
-  //     case "02d":
-  //     case "03d":
-  //     case "04d":
-  //       img = CLOUD_IMG;
-  //       imgClass = "cloud_img";
-  //       break;
-  //     case "09d":
-  //     case "10d":
-  //       img = RAIN_IMG;
-  //       imgClass = "rain_img";
-  //       break;
-  //     default:
-  //       img = FEW_CLOUDS_IMG;
-  //       imgClass = "few_cloud_img";
-  //       break;
-  //   }
-  //   return { img, imgClass };
-  // };
   return (
     <section className="fiveDays_forecast_sec">
       <h1>5-DAYS FORECAST</h1>
       <ul>
-        {averageTempArr.map((averg_temp, i) => {
-          // const { img, imgClass } = setWeatherImg(v);
+        {forecastByDay.map((inner_arr, i) => {
+          let totalTemp = inner_arr.reduce(
+            (acc, cur) => acc + cur.main.temp,
+            0
+          );
+          let averageTemp = totalTemp / inner_arr.length;
+          let weather = inner_arr[0].weather[0];
+
+          const { img, imgClass } = setImg_Class_dis(weather);
           return (
             <li key={i}>
-              <p>{new Date(unsorted_forecast_arr[i][0].dt_txt).toDateString().slice(0, 4)}</p>
+              <p>{new Date(inner_arr[0].dt_txt).toDateString().slice(0, 4)}</p>
               <span>
-                <img src={SUN_IMG} className="sun_img"/>
-                <h6>Suuny</h6>
+                <img src={img} className={imgClass} />
+                <h6>{weather.main}</h6>
               </span>
-              <h6>{Math.ceil(averg_temp - 273.15)}°c</h6>
+              <h6>{Math.ceil(averageTemp - 273.15)}°c</h6>
             </li>
           );
         })}
