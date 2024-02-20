@@ -1,7 +1,6 @@
 import React from "react";
 import "../App.css";
 import SUN_IMG from "../assets/images/sun_img.webp";
-import CLOUD_IMG from "../assets/images/cloud_img.png";
 import RAIN_IMG from "../assets/images/rain_img.png";
 import FEW_CLOUDS_IMG from "../assets/images/sun_cloud_img.png";
 import MOON_IMG from "../assets/images/moon_img.webp";
@@ -23,10 +22,6 @@ function CurrentTempSec({ data }) {
     case data.list[0].sys.pod == "n":
       img = MOON_IMG;
       imgClass = "moon_img";
-      break;
-    case weather.main == "Clouds" && weather.discription != "few clouds":
-      img = CLOUD_IMG;
-      imgClass = "cloud_img";
       break;
     case weather.main == "Clear":
       img = SUN_IMG;

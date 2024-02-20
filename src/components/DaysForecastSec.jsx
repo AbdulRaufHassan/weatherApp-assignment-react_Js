@@ -23,28 +23,33 @@ function DaysForecastSec({ data }) {
     return accumulator;
   }, []);
 
-  const setImg_Class_dis = (weather) => {
+  const setImg_Class_dis = (avrg_Temp, weather) => {
     let img = FEW_CLOUDS_IMG;
     let imgClass = "few_cloud_img";
-    switch (weather.main) {
-      case "Snow":
+    let weatherDis = "few clouds";
+    switch (true) {
+      case avrg_Temp < 0:
         img = SNOW_IMG;
         imgClass = "snow_img";
+        weatherDis = "Snow";
         break;
-      case "Rain":
+      case avrg_Temp >= 0 && avrg_Temp < 10:
         img = RAIN_IMG;
         imgClass = "rain_img";
+        weatherDis = "Rain";
         break;
-      case "Clouds" && weather.discription != "few clouds":
+      case avrg_Temp >= 10 && avrg_Temp < 20:
         img = CLOUD_IMG;
         imgClass = "cloud_img";
+        weatherDis = "Clouds";
         break;
-      case "Clear":
+      case avrg_Temp >= 20:
         img = SUN_IMG;
         imgClass = "sun_img";
+        weatherDis = "Clear";
         break;
     }
-    return { img, imgClass };
+    return { img, imgClass, weatherDis };
   };
 
   return (
@@ -57,15 +62,17 @@ function DaysForecastSec({ data }) {
             0
           );
           let averageTemp = totalTemp / inner_arr.length;
-          let weather = inner_arr[0].weather[0];
 
-          const { img, imgClass } = setImg_Class_dis(weather);
+          const { img, imgClass, weatherDis } = setImg_Class_dis(
+            Math.ceil(averageTemp - 273.15),
+            inner_arr[0].weather[0]
+          );
           return (
             <li key={i}>
               <p>{new Date(inner_arr[0].dt_txt).toDateString().slice(0, 4)}</p>
               <span>
                 <img src={img} className={imgClass} />
-                <h6>{weather.main}</h6>
+                <h6>{weatherDis}</h6>
               </span>
               <h6>{Math.ceil(averageTemp - 273.15)}°c</h6>
             </li>

@@ -8,7 +8,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [cityName, setCityName] = useState("");
   const [weatherData, setWeatherData] = useState([]);
-  const [inValidCity, setInValidCity] = useState(true);
+  const [errorMsg, setErrorMsg] = useState('');
 
   const fetchWeatherData = async (cityName) => {
     try {
@@ -19,15 +19,17 @@ function App() {
       if (!data.message) {
         setWeatherData(data);
         setLoading(false);
-        setInValidCity(false);
+        setErrorMsg('');
         setCityName("");
       } else {
         setLoading(false);
-        setInValidCity(true);
+        setErrorMsg('City Not Found');
         setCityName('')
       }
     } catch (error) {
       console.log(error);
+      setLoading(false);
+      setErrorMsg('No Internet Connection')
     }
   };
 
@@ -54,18 +56,18 @@ function App() {
             >
               Search
             </button>
-            {!inValidCity ? (
+            {!errorMsg ? (
               <>
                 <CurrentTempSec data={weatherData} />
                 <AirConditionsSec data={weatherData} />
               </>
             ) : (
               <div className="notFound_msg">
-                <h1>City Not Found</h1>
+                <h1>{errorMsg}</h1>
               </div>
             )}
           </div>
-          {!inValidCity ? (
+          {!errorMsg ? (
             <div>
               <DaysForecastSec data={weatherData} />
             </div>
