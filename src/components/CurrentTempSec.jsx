@@ -8,25 +8,31 @@ import SNOW_IMG from "../assets/images/snow_img.webp";
 
 function CurrentTempSec({ data }) {
   let weather = data.list[0].weather[0];
-  let img = FEW_CLOUDS_IMG;
-  let imgClass = "few_cloud_img";
-  switch (true) {
-    case weather.main == "Snow":
-      img = SNOW_IMG;
-      imgClass = "snow_img";
-      break;
-    case weather.main == "Rain":
-      img = RAIN_IMG;
-      imgClass = "rain_img";
-      break;
-    case data.list[0].sys.pod == "n":
-      img = MOON_IMG;
-      imgClass = "moon_img";
-      break;
-    case weather.main == "Clear":
-      img = SUN_IMG;
-      imgClass = "sun_img";
-      break;
+  let img;
+  let imgClass;
+  const currentTime = new Date().getTime() / 1000;
+  if (currentTime > data.city.sunrise && currentTime < data.city.sunset) {
+    switch (true) {
+      case weather.main == "Snow":
+        img = SNOW_IMG;
+        imgClass = "snow_img";
+        break;
+      case weather.main == "Rain":
+        img = RAIN_IMG;
+        imgClass = "rain_img";
+        break;
+      case weather.main == "Clear":
+        img = SUN_IMG;
+        imgClass = "sun_img";
+        break;
+      default:
+        img = FEW_CLOUDS_IMG;
+        imgClass = "few_cloud_img";
+        break;
+    }
+  } else {
+    img = MOON_IMG;
+    imgClass = "moon_img";
   }
 
   return (
