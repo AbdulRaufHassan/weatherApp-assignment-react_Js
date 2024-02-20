@@ -38,12 +38,12 @@ function DaysForecastSec({ data }) {
         imgClass = "rain_img";
         weatherDis = "Rain";
         break;
-      case avrg_Temp >= 10 && avrg_Temp < 20:
+      case avrg_Temp >= 10 && avrg_Temp <= 15:
         img = CLOUD_IMG;
         imgClass = "cloud_img";
         weatherDis = "Clouds";
         break;
-      case avrg_Temp >= 20:
+      case avrg_Temp > 20:
         img = SUN_IMG;
         imgClass = "sun_img";
         weatherDis = "Clear";
