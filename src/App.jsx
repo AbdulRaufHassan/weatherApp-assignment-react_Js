@@ -43,7 +43,7 @@ function App() {
           <div>
             <input
               type="text"
-              placeholder="Enter country / city name"
+              placeholder="Enter city or country name"
               value={cityName}
               onChange={(e) => setCityName(e.target.value)}
             />
